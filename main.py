@@ -66,7 +66,6 @@ if __name__ == '__main__':
         else:
             logging.info(f'Downloading Zip Content from: {url_zip_download_contents[0]}')
             downlod_zip_content(url_zip_download_contents[0])
-
     elif page.status_code in HTTP_CODE_CLIENT_ERROR or page.status_code in HTTP_CODE_SERVER_ERROR:
         logging.info('Site not accessed, check URL or Internet Connection')
 
