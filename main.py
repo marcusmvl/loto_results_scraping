@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import datetime
 import logging
@@ -18,6 +19,7 @@ logging.basicConfig(filename='mega_sena_results_' + current_date + '.log', filem
 
 
 def scraping(page_requested):
+    """find in Download section from Caixa Mega sena results page and return URLs with .zip content"""
     soup = BeautifulSoup(page_requested.content, 'html.parser')
     htlm_as = soup.find_all('a', class_=HTML_A_CLASS_DOWNLOAD_ZIPS, href=True)
     url_zip_download_links = [a['href'] for a in htlm_as if a['href'][-4:] == '.zip']
@@ -25,6 +27,7 @@ def scraping(page_requested):
 
 
 def downlod_zip_content(url):
+    """download zip content from URL and saves in current directory"""
     content = requests.get(url)
     if content.status_code in HTTP_CODE_SUCCESS:
         donwload_dir = create_folder()
@@ -32,12 +35,12 @@ def downlod_zip_content(url):
             zip_file.write(content.content)
             logging.info('Zip file downloaded.')
         return True
-    else:
-        logging.error(f'Zip file not downloaded, status code={content.satus_code}')
-        return False
+    logging.error(f'Zip file not downloaded, status code={content.satus_code}')
+    return False
 
 
 def create_folder(dir=os.getcwd(), name=current_date):
+    """create a new folder (if not existis) with a name pattern directory/name"""
     directory = dir + '/' + name
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -62,10 +65,10 @@ if __name__ == '__main__':
         url_zip_download_contents = scraping(page)
         if not url_zip_download_contents:
             logging.error(f'HTML Elements not found, check HTML_A_CLASS_DOWNLOAD_ZIPS={HTML_A_CLASS_DOWNLOAD_ZIPS}')
-            quit()
+            sys.exit()
         else:
+            #use index 0 for results in draw order or 1 for asceding order
             logging.info(f'Downloading Zip Content from: {url_zip_download_contents[0]}')
             downlod_zip_content(url_zip_download_contents[0])
     elif page.status_code in HTTP_CODE_CLIENT_ERROR or page.status_code in HTTP_CODE_SERVER_ERROR:
         logging.info('Site not accessed, check URL or Internet Connection')
-
