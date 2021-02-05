@@ -1,6 +1,17 @@
 # mega_sena_results_scraping
 Get Mega sena results from http://loterias.caixa.gov.br/
 
-Install requirements and run main.py.
+####1.Install app/src/requirements.txt
 
-To schedule execution use Windows Task Scheduler(creatig a bat file) or Crontab in Linux.
+####2: run app/src/migrations.py
+will create all necessary directories 
+- **raw**: files downloaded from Loterias Caixa
+- **swamp**: files unzip and transformed to csv format
+- **log**: executions logs
+- **temp**: where zip files are unziped
+
+###3: run app/src/raw.py
+to download Mega Sena results from Caixa (.zip format)
+
+###4: run app/src/swamp.py
+to unzip previous donwloaded file and transform in csv fixing rowspan "bug"
