@@ -3,15 +3,18 @@ Get Mega sena results from http://loterias.caixa.gov.br/
 
 ####1.Install app/src/requirements.txt
 
-####2: run app/src/migrations.py
+####2: python app/src/migrations.py
 will create all necessary directories 
-- **raw**: files downloaded from Loterias Caixa
-- **swamp**: files unzip and transformed to csv format
-- **log**: executions logs
-- **temp**: where zip files are unziped
+- *log*: executions logs
+- *raw*: files downloaded from Loterias Caixa
+- *swamp*: where zip files are unziped 
+- *lake*: transformed to treated csv format
 
-###3: run app/src/raw.py
-to download Mega Sena results from Caixa (.zip format)
+###3: python app/src/[step].py [result_type]
+to run each step
 
-###4: run app/src/swamp.py
-to unzip previous donwloaded file and transform in csv fixing rowspan "bug"
+- step = [raw, swamp, lake]
+- result_type = [megasena, quina, lotofacil]
+
+###TO DO:
+- orchestration of all steps
