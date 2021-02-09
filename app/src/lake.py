@@ -7,7 +7,7 @@ import utils
 pd.set_option('display.max_columns', 22)
 pd.set_option('display.width', 1000)
 
-os.chdir('../..')
+os.chdir('..')
 CONSTANTS = utils.Defaults()
 CURRENT_DATE = CONSTANTS.CURRENT_DATE
 
@@ -17,10 +17,10 @@ except:
     print('No input argument specifield.\nOnly accepts = [megasena, quina, lotofacil]')
 
 if ARG_CMD_INPUT == 'megasena':
-    FILE_NAME = '\\d_mega.htm'
-    DIR_LAKE = CONSTANTS.DIR_LAKE_MEGASENA
-    DIR_SWAMP = CONSTANTS.DIR_SWAMP_MEGASENA
-    PATH_TO_FILE = os.getcwd() + DIR_SWAMP + CURRENT_DATE + FILE_NAME
+    FILE_NAME = 'd_mega.htm'
+    DIR_LAKE = os.path.join(os.getcwd(), 'data', 'lake', 'megasena')
+    DIR_SWAMP = os.path.join(os.getcwd(), 'data', 'swamp', 'megasena')
+    PATH_TO_FILE = os.path.join(DIR_SWAMP, CURRENT_DATE, FILE_NAME)
     COLUMNS_GROUPBY_UF = ['Concurso', 'Data Sorteio', '1ª Dezena', '2ª Dezena', '3ª Dezena', '4ª Dezena', '5ª Dezena',
                           '6ª Dezena', 'Arrecadacao_Total', 'Ganhadores_Sena', 'Cidade', 'Rateio_Sena',
                           'Ganhadores_Quina', 'Rateio_Quina', 'Ganhadores_Quadra', 'Rateio_Quadra', 'Acumulado',
@@ -31,10 +31,10 @@ if ARG_CMD_INPUT == 'megasena':
                               'Valor_Acumulado', 'Estimativa_Prêmio', 'Acumulado_Mega_da_Virada']
 
 elif ARG_CMD_INPUT == 'quina':
-    FILE_NAME = '\\d_quina.htm'
-    DIR_LAKE = CONSTANTS.DIR_LAKE_QUINA
-    DIR_SWAMP = CONSTANTS.DIR_SWAMP_QUINA
-    PATH_TO_FILE = os.getcwd() + DIR_SWAMP + CURRENT_DATE + FILE_NAME
+    FILE_NAME = 'd_quina.htm'
+    DIR_LAKE = os.path.join(os.getcwd(), 'data', 'lake', 'quina')
+    DIR_SWAMP = os.path.join(os.getcwd(), 'data', 'swamp', 'quina')
+    PATH_TO_FILE = os.path.join(DIR_SWAMP, CURRENT_DATE, FILE_NAME)
     COLUMNS_GROUPBY_UF = ['Concurso', 'Data Sorteio', '1ª Dezena', '2ª Dezena', '3ª Dezena', '4ª Dezena', '5ª Dezena',
                           'Arrecadacao_Total', 'Ganhadores_Quina', 'Cidade', 'Rateio_Quina', 'Ganhadores_Quadra',
                           'Rateio_Quadra', 'Ganhadores_Terno', 'Rateio_Terno',
@@ -46,10 +46,10 @@ elif ARG_CMD_INPUT == 'quina':
                           'Ganhadores_Duque', 'Rateio_Duque', 'Acumulado', 'Valor_Acumulado', 'Estimativa_Premio',
                           'Valor_Acumulado_Sorteio_Especial_São_João']
 elif ARG_CMD_INPUT == 'lotofacil':
-    FILE_NAME = '\\d_lotfac.htm'
-    DIR_LAKE = CONSTANTS.DIR_LAKE_LOTOFACIL
-    DIR_SWAMP = CONSTANTS.DIR_SWAMP_LOTOFACIL
-    PATH_TO_FILE = os.getcwd() + DIR_SWAMP + CURRENT_DATE + FILE_NAME
+    FILE_NAME = 'd_lotfac.htm'
+    DIR_LAKE = os.path.join(os.getcwd(), 'data', 'lake', 'lotofacil')
+    DIR_SWAMP = os.path.join(os.getcwd(), 'data', 'swamp', 'lotofacil')
+    PATH_TO_FILE = os.path.join(DIR_SWAMP, CURRENT_DATE, FILE_NAME)
     COLUMNS_GROUPBY_UF = ['Concurso', 'Data Sorteio', 'Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6', 'Bola7',
                           'Bola8', 'Bola9', 'Bola10', 'Bola11', 'Bola12', 'Bola13', 'Bola14', 'Bola15',
                           'Arrecadacao_Total', 'Ganhadores_15_Números', 'Cidade', 'Ganhadores_14_Números',
@@ -67,7 +67,9 @@ elif ARG_CMD_INPUT == 'lotofacil':
 else:
     print(f'Invalid input = {ARG_CMD_INPUT}\nOnly accepts = [megasena, quina, lotofacil]')
 
-soup = BeautifulSoup(open(PATH_TO_FILE), 'html.parser')
+with open(PATH_TO_FILE, 'rb') as f:
+    file_read = f.read()
+soup = BeautifulSoup(file_read, 'html.parser')
 html_table = soup.find_all("table")
 
 html_all_trs = html_table[0].find_all('tr')
@@ -105,6 +107,6 @@ df_final = pd.merge(df_uf_group_cidade_null, df_cidade_group, how="left", on=['C
 df_final.drop(df_final.filter(regex='_y$').columns.tolist(), axis=1, inplace=True)
 df_final.columns = df_final.columns.str.rstrip('_x')
 
-LAKE_FILE_DIR = utils.create_folder(directory=os.getcwd() + DIR_LAKE, name=CURRENT_DATE)
-
-df_final.to_csv(LAKE_FILE_DIR + '\\treated.csv', sep='|', index=False)
+utils.create_folder(directory=DIR_LAKE, name=CURRENT_DATE)
+LAKE_FILE_DIR = os.path.join(DIR_LAKE, CURRENT_DATE, 'treated.csv')
+df_final.to_csv(LAKE_FILE_DIR, sep='|', index=False)

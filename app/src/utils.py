@@ -12,9 +12,9 @@ class Defaults:
     LOGGING_LEVE = 'logging.DEBUG'
     LOGGING_NAME = CURRENT_DATE + '.log'
 
-    DIR_PROJECT = '\\mega_sena_results_scraping\\'
-    DIR_LOG = DIR_PROJECT + '\\log\\'
-    DIR_RAW = DIR_PROJECT + '\\data\\raw\\'
+    DIR_PROJECT = 'mega_sena_results_scraping'
+    DIR_LOG = DIR_PROJECT + 'log'
+    DIR_RAW = DIR_PROJECT + 'data\\raw\\'
     DIR_SWAMP = DIR_PROJECT + '\\data\\swamp\\'
     DIR_LAKE = DIR_PROJECT + '\\data\\lake\\'
 
@@ -33,7 +33,7 @@ class Defaults:
 
 def create_folder(directory=os.getcwd() + Defaults().DIR_PROJECT, name=Defaults().CURRENT_DATE):
     """create a new folder (if not existis) with a name pattern directory/name"""
-    directory = directory + '\\' + name
+    directory = os.path.join(directory, name)
     if not os.path.exists(directory):
         os.makedirs(directory)
         logging.info(f'Directory created: {directory}')
