@@ -67,7 +67,7 @@ elif ARG_CMD_INPUT == 'lotofacil':
 else:
     print(f'Invalid input = {ARG_CMD_INPUT}\nOnly accepts = [megasena, quina, lotofacil]')
 
-with open(PATH_TO_FILE, 'rb') as f:
+with open(PATH_TO_FILE, 'r') as f:
     file_read = f.read()
 soup = BeautifulSoup(file_read, 'html.parser')
 html_table = soup.find_all("table")
