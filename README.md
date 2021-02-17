@@ -1,5 +1,5 @@
-# mega_sena_results_scraping
-Get Mega sena results from http://loterias.caixa.gov.br/
+# loto_results_scraping
+Get Loto results from http://loterias.caixa.gov.br/
 
 ####1.Install app/src/requirements.txt
 
